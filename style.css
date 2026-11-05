@@ -1,0 +1,33 @@
+:root { --paper:#f1e6cc; --paper2:#e8d9b6; --ink:#2b1d12; --rub:#7a1f14; --mute:#6b5640; --line:#c9b48a; }
+* { box-sizing: border-box; }
+body { margin:0; background: var(--paper); color: var(--ink); font: 19px/1.55 "IM Fell English", Georgia, serif; }
+a { color: var(--rub); }
+header { text-align:center; padding: 46px 20px 26px; background: radial-gradient(ellipse at top, #fbf3df, var(--paper)); border-bottom: 1px solid var(--line); }
+.kicker { font-family:"IM Fell English SC", serif; color: var(--rub); letter-spacing:.06em; margin:0; }
+header h1 { font-weight:normal; font-size: clamp(30px, 6vw, 46px); margin: 6px 0 10px; line-height:1.15; }
+header p.intro { max-width: 640px; margin: 0 auto; color: var(--mute); font-style: italic; }
+.orn { color: var(--rub); margin: 12px 0 0; }
+nav.top { text-align:center; font-family:"IM Fell English SC", serif; padding: 10px; border-bottom: 1px solid var(--line); background: var(--paper2); }
+nav.top a { margin: 0 12px; text-decoration:none; }
+main { max-width: 940px; margin: 0 auto; padding: 24px 18px 60px; }
+.grid { display:grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 30px 24px; }
+.grid a { text-decoration:none; color: var(--ink); text-align:center; }
+.grid img { width:100%; height:auto; box-shadow: 0 6px 18px rgba(43,29,18,.35); border-radius: 3px; }
+.grid h3 { font-weight:normal; font-size: 20px; margin: 10px 0 2px; }
+.grid p { font-size: 15px; color: var(--mute); margin:0; font-style: italic; }
+.book { display:flex; gap: 34px; align-items:flex-start; }
+.cover { width: 260px; height:auto; flex: 0 0 auto; box-shadow: 0 6px 18px rgba(43,29,18,.35); border-radius: 3px; }
+.body { flex: 1; min-width: 0; }
+.sub { color: var(--mute); font-style: italic; margin: 0 0 14px; }
+.btns { display:flex; gap: 10px; flex-wrap: wrap; margin: 18px 0 8px; }
+.btn { font-family:"IM Fell English SC", serif; font-size: 18px; letter-spacing:.03em; padding: 10px 18px; border-radius: 4px; background: var(--rub); color: #fbf1dc; text-decoration:none; display:inline-block; }
+.btn:hover { background: #5e170f; }
+.btn.alt { background: transparent; color: var(--rub); border: 1px solid var(--rub); }
+h2 { font-weight: normal; font-size: 28px; margin: 40px 0 14px; text-align:center; }
+.pins { display:grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 16px; }
+.pins img { width:100%; height:auto; border-radius: 3px; box-shadow: 0 3px 10px rgba(43,29,18,.3); }
+.pin { display:flex; gap: 34px; align-items:flex-start; }
+.pin img.big { width: 380px; max-width: 100%; height:auto; border-radius: 4px; box-shadow: 0 6px 18px rgba(43,29,18,.35); }
+.fine { font-size: 15px; color: var(--mute); }
+footer { text-align:center; color: var(--mute); font-size: 15px; padding: 10px 20px 40px; border-top: 1px solid var(--line); }
+@media (max-width: 680px) { .book, .pin { flex-direction: column; align-items:center; } .cover { width: 200px; } }

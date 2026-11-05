@@ -1,0 +1,41 @@
+name: Daily pins
+
+on:
+  push:
+    branches: [main]
+  schedule:
+    - cron: "23 5 * * *"   # every day, 05:23 UTC (10:53 in Sri Lanka)
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+  actions: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build today's feeds
+        run: python3 tools/build_feeds.py
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: .
+      - id: deployment
+        uses: actions/deploy-pages@v4
+      - name: Keep the daily schedule switched on
+        # GitHub pauses scheduled workflows after 60 quiet days; re-enabling resets that clock.
+        if: github.event_name == 'schedule'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh workflow enable drip.yml --repo "${{ github.repository }}" || true
