@@ -4,7 +4,8 @@ on:
   push:
     branches: [main]
   schedule:
-    - cron: "23 5 * * *"   # every day, 05:23 UTC (10:53 in Sri Lanka)
+    - cron: "23 5 * * *"    # every day, 05:23 UTC (10:53 in Sri Lanka)
+    - cron: "47 16 * * *"   # a second try each day (22:17 in Sri Lanka), in case the first one fails
   workflow_dispatch:
 
 permissions:
