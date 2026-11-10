@@ -34,6 +34,8 @@ jobs:
           path: .
       - id: deployment
         uses: actions/deploy-pages@v4
+        with:
+          timeout: 1800000   # wait up to 30 minutes when GitHub Pages is slow
       - name: Keep the daily schedule switched on
         # GitHub pauses scheduled workflows after 60 quiet days; re-enabling resets that clock.
         if: github.event_name == 'schedule'
