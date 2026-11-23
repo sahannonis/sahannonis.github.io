@@ -25,14 +25,32 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
+      - name: Skip if today's pins are already out
+        # the evening run is only a backup: if a run already worked today, there is nothing to do
+        id: check
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          done_today=0
+          if [ "${{ github.event_name }}" = "schedule" ]; then
+            done_today=$(gh run list --repo "${{ github.repository }}" --workflow drip.yml --status success \
+              --created ">=$(date -u +%F)" --json databaseId -q length || echo 0)
+          fi
+          echo "skip=$([ "$done_today" -gt 0 ] && echo true || echo false)" >> "$GITHUB_OUTPUT"
+          echo "successful runs today: $done_today"
       - uses: actions/checkout@v4
+        if: steps.check.outputs.skip != 'true'
       - name: Build today's feeds
+        if: steps.check.outputs.skip != 'true'
         run: python3 tools/build_feeds.py
       - uses: actions/configure-pages@v5
+        if: steps.check.outputs.skip != 'true'
       - uses: actions/upload-pages-artifact@v3
+        if: steps.check.outputs.skip != 'true'
         with:
           path: .
       - id: deployment
+        if: steps.check.outputs.skip != 'true'
         uses: actions/deploy-pages@v4
         with:
           timeout: 1800000   # wait up to 30 minutes when GitHub Pages is slow
