@@ -23,7 +23,6 @@ jobs:
     runs-on: ubuntu-latest
     environment:
       name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - name: Skip if today's pins are already out
         # the evening run is only a backup: if a run already worked today, there is nothing to do
@@ -51,9 +50,28 @@ jobs:
           path: .
       - id: deployment
         if: steps.check.outputs.skip != 'true'
+        continue-on-error: true
         uses: actions/deploy-pages@v4
         with:
           timeout: 1800000   # wait up to 30 minutes when GitHub Pages is slow
+      # GitHub sometimes can't find the uploaded site for a minute or two; wait and try again
+      - name: Wait before trying again
+        if: steps.check.outputs.skip != 'true' && steps.deployment.outcome == 'failure'
+        run: sleep 120
+      - id: deployment2
+        if: steps.check.outputs.skip != 'true' && steps.deployment.outcome == 'failure'
+        continue-on-error: true
+        uses: actions/deploy-pages@v4
+        with:
+          timeout: 1800000
+      - name: Wait longer before the last try
+        if: steps.check.outputs.skip != 'true' && steps.deployment.outcome == 'failure' && steps.deployment2.outcome == 'failure'
+        run: sleep 300
+      - id: deployment3
+        if: steps.check.outputs.skip != 'true' && steps.deployment.outcome == 'failure' && steps.deployment2.outcome == 'failure'
+        uses: actions/deploy-pages@v4
+        with:
+          timeout: 1800000
       - name: Keep the daily schedule switched on
         # GitHub pauses scheduled workflows after 60 quiet days; re-enabling resets that clock.
         if: github.event_name == 'schedule'
